@@ -32,11 +32,14 @@
                         title="Roles"
                     ></v-list-item>
                 </v-list-group>
-                <v-list-item link prepend-icon="mdi-logout-variant mdi-18px" title="Logout" @click="logout"></v-list-item>
+                <v-list-item link prepend-icon="mdi-logout-variant mdi-18px" title="Logout" @click="loginStore.logout"></v-list-item>
             </v-list>
         </v-navigation-drawer>
 
         <v-main style="background: #ECEFF1; min-height: 100vh;">
+            <pre>{{ loginStore.user }}</pre>
+            <p>token: {{ loginStore.token }}</p>
+
             <v-footer dense bottom absolute width="100%">
                 <span
                     style="color: #324c6e !important; font-weight: 400;"
@@ -48,15 +51,10 @@
 
 <script lang="ts" setup>
 import { watch, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useLoginStore } from '../stores/loginStore'
 
-const router = useRouter()
+const loginStore = useLoginStore();
 const drawer = ref(true)
-
-const logout = () => {
-    localStorage.removeItem("spa_token");
-    router.push({name: 'login'})
-}
 
 watch(
     () => drawer,

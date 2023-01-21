@@ -19,7 +19,7 @@
                   name="email"
                   prepend-icon="mdi-account"
                   type="text"
-                  v-model="login.user.username"
+                  v-model="loginStore.user.username"
                 ></v-text-field>
   
                 <v-text-field
@@ -27,21 +27,21 @@
                   name="password"
                   prepend-icon="mdi-lock"
                   type="password"
-                  v-model="login.user.password"
+                  v-model="loginStore.user.password"
                 ></v-text-field>
                 <div
                   style="color: red; text-align: center"
-                  v-for="error in login.errorLoginMessages"
+                  v-for="error in loginStore.errorLoginMessages"
                   :key="error"
                 >
                   <span>{{ error }}</span
                   ><br />
                 </div>
   
-                  <pre>{{ login.user }}</pre>
-                  <pre>{{ login.errorLoginMessages }}</pre>
-                  <pre>{{ login.token }}</pre>
-                  <pre>{{ login.message}}</pre>
+                  <pre>{{ loginStore.user }}</pre>
+                  <pre>{{ loginStore.errorLoginMessages }}</pre>
+                  <pre>{{ loginStore.token }}</pre>
+                  <pre>{{ loginStore.message}}</pre>
               </v-form>
             </v-card-text>
             <v-card-actions>
@@ -63,18 +63,17 @@
   
   <script lang="ts" setup>
   import { useRouter } from 'vue-router'
-  import { loginStore } from '../stores/loginStore';
+  import { useLoginStore } from '../stores/loginStore';
 
-  const login = loginStore();
+  const loginStore = useLoginStore();
   const router = useRouter()
-//   const { message, token, user, errorLoginMessages, loginUser } = useLogin();
 
   const validateCredentials = () => {
-        login.cleanLogin()
-        if(!login.user?.username) login.errorLoginMessages.push("Ingrese email");
-        if(!login.user?.password) login.errorLoginMessages.push("Ingrese password");
-        if(login.errorLoginMessages.length > 0) login.errorLogin = true;
-        return login.errorLogin;
+        loginStore.cleanLogin()
+        if(!loginStore.user?.username) loginStore.errorLoginMessages.push("Ingrese email");
+        if(!loginStore.user?.password) loginStore.errorLoginMessages.push("Ingrese password");
+        if(loginStore.errorLoginMessages.length > 0) loginStore.errorLogin = true;
+        return loginStore.errorLogin;
     };
 
     const onLogin = async () => {
@@ -82,8 +81,7 @@
             return
         }
      
-        login.login().then((response: any) =>{
-            console.log(response)
+        loginStore.login().then((response: any) =>{
             if(response.status === 201) {
             router.push({
                 name: 'home'
