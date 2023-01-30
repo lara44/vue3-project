@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import home from '../views/Home.vue';
 import login from '../views/Login.vue';
+import user from '../components/users/UserContainer.vue';
 import dashboard from '../components/Dashboard.vue';
 import { useLoginStore } from '../stores/loginStore';
 
@@ -31,16 +32,16 @@ const routes: RouteRecordRaw[] = [
         path: '/home',
         name: 'home',
         component: home,
-        beforeEnter: requiredAuth
-        // beforeEnter: (to, from, next) => {
-        //     // const loginS = loginStore();
-        //     console.log(localStorage.getItem('spa_token'), "entró");
-        //     if(!localStorage.getItem('spa_token')){
-        //         router.push('/login');
-        //     }
-        //     next();
-        // }
-    },
+        beforeEnter: requiredAuth, 
+        children: [
+            {
+                path: '/users',
+                name: 'users',
+                component: user,
+                beforeEnter: requiredAuth
+            }
+        ]
+    }
 ];
 
 const router = createRouter({
