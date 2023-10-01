@@ -93,7 +93,7 @@
   
   <style>
   .container-principal {
-    min-height: 100vh;
+    min-height: 100vh !important;
     background: #eceff1;
     overflow: hidden;
     display: flex;

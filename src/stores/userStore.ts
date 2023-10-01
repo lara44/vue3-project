@@ -1,40 +1,38 @@
-import { defineStore } from "pinia"
-import axios from "axios";
-import { setTransitionHooks } from "vue";
+import { defineStore } from "pinia";
+import { HttpClient } from "../services/httpClient";
 
-export interface objectListUser{
-    id:string; name: string; email: string;
-}[]
+const http = new HttpClient();
 
 export interface User {
-    listUsers: Array<objectListUser>;
-    user: {id:string; name:string; email:string};
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
 }
+export const useUserStore = defineStore("userStore", {
+  state: () => {
+    return {
+      listUsers: Array<User>,
+      user: {
+        id: "",
+        name: "",
+        email: "",
+        created_at: "",
+      } as User,
+    };
+  },
 
-export const useUserStore = defineStore('userStore', {
-    state: (): User => {
-        return {
-            listUsers: [],
-            user: {
-                id: '',
-                name: '',
-                email: '',
-            }
-        } 
-    }, 
-
-    actions: {
-        async getUsers(){
-            try {
-                console.log("entró")
-                const response = await axios.get('http://localhost:8084/laravel9/public/api/auth/users')
-                if(response.data.users){
-                    this.listUsers =  response.data.users.data
-                    console.log("respuesta", response.data.users.data, this.listUsers)
-                }
-            } catch (error) {
-                console.log(error)
-            }
+  actions: {
+    async getUsers() {
+      try {
+        const url = "http://localhost:8084/laravel9/public/api/auth/users";
+        const response = await http.get(url);
+        if (response.data.users) {
+          this.listUsers = response.data.users.data;
         }
-    }
-})
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+});
